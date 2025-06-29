@@ -102,13 +102,16 @@ $progress = $total_ck > 0 ? round(($checked / $total_ck) * 100) : 0;
     <a href="#" class="w3-bar-item w3-button w3-padding w3-blue">
       <i class="fa fa-eye fa-fw"></i> Overview
     </a>
-    <a href="#" class="w3-bar-item w3-button w3-padding">
+
+    <a href="../php/achecklist.php" class="w3-bar-item w3-button w3-padding">
       <i class="fa fa-check-square-o fa-fw"></i> Checklist
     </a>
-    <a href="#" class="w3-bar-item w3-button w3-padding">
+
+    </a>
+    <a href="adrafts.php" class="w3-bar-item w3-button w3-padding">
       <i class="fa fa-upload fa-fw"></i> Drafts
     </a>
-    <a href="#" class="w3-bar-item w3-button w3-padding">
+    <a href="astudents.php" class="w3-bar-item w3-button w3-padding">
       <i class="fa fa-users fa-fw"></i> Students
     </a>
   </div>
@@ -170,9 +173,6 @@ $progress = $total_ck > 0 ? round(($checked / $total_ck) * 100) : 0;
     </div>
   </div>
 
-  <footer class="w3-container w3-padding-16 w3-light-grey">
-    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-  </footer>
 </div>
 
 <script>

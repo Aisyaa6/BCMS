@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($role === 'teacher') {
             header("Location: ../php/ahome.php");
         } else {
-            header("Location: ../public/dashboard.html");
+            header("Location: ../php/shome.php");
         }
         exit;
     } else {
