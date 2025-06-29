@@ -70,6 +70,10 @@ $progress = $total_tasks > 0 ? round(($checked / $total_tasks) * 100) : 0;
     <a href="#" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-eye fa-fw"></i> Overview</a>
     <a href="schecklist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-check-square-o fa-fw"></i> Checklist</a>
     <a href="sdrafts.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-upload fa-fw"></i> Drafts</a>
+    <a href="../php/logout.php" 
+    class="w3-bar-item w3-button w3-padding">
+   <i class="fa fa-sign-out fa-fw"></i> Logout
+   </a>
   </div>
 </nav>
 
@@ -83,7 +87,7 @@ $progress = $total_tasks > 0 ? round(($checked / $total_tasks) * 100) : 0;
 
   <div class="w3-row-padding w3-margin-bottom">
     <div class="w3-quarter">
-      <div class="w3-container w3-red w3-padding-16">
+      <div class="w3-container w3-blue-grey w3-padding-16">
         <div class="w3-left"><i class="fa fa-eye-slash w3-xxxlarge"></i></div>
         <div class="w3-right"><h3><?= $unviewed ?></h3></div>
         <div class="w3-clear"></div>
@@ -91,7 +95,8 @@ $progress = $total_tasks > 0 ? round(($checked / $total_tasks) * 100) : 0;
       </div>
     </div>
     <div class="w3-quarter">
-      <div class="w3-container w3-blue w3-padding-16">
+      <div class="w3-container w3-blue-grey w3-padding-16">
+
         <div class="w3-left"><i class="fa fa-upload w3-xxxlarge"></i></div>
         <div class="w3-right"><h3><?= $submitted ?></h3></div>
         <div class="w3-clear"></div>
@@ -99,7 +104,8 @@ $progress = $total_tasks > 0 ? round(($checked / $total_tasks) * 100) : 0;
       </div>
     </div>
     <div class="w3-quarter">
-      <div class="w3-container w3-teal w3-padding-16">
+      <div class="w3-container w3-blue-grey w3-padding-16">
+
         <div class="w3-left"><i class="fa fa-eye w3-xxxlarge"></i></div>
         <div class="w3-right"><h3><?= $viewed ?></h3></div>
         <div class="w3-clear"></div>
@@ -107,7 +113,8 @@ $progress = $total_tasks > 0 ? round(($checked / $total_tasks) * 100) : 0;
       </div>
     </div>
     <div class="w3-quarter">
-      <div class="w3-container w3-orange w3-text-white w3-padding-16">
+      <div class="w3-container w3-blue-grey w3-padding-16">
+
         <div class="w3-left"><i class="fa fa-check-square-o w3-xxxlarge"></i></div>
         <div class="w3-right"><h3><?= $checked ?></h3></div>
         <div class="w3-clear"></div>

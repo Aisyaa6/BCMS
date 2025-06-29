@@ -96,6 +96,10 @@ $tasks = $conn->query("SELECT * FROM Task WHERE TID = $teacher_id ORDER BY TKID 
     <a href="achecklist.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-check-square-o fa-fw"></i> Checklist</a>
     <a href="adrafts.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-upload fa-fw"></i> Drafts</a>
     <a href="astudents.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i> Students</a>
+    <a href="../php/logout.php" 
+    class="w3-bar-item w3-button w3-padding">
+   <i class="fa fa-sign-out fa-fw"></i> Logout
+   </a>
   </div>
 </nav>
 

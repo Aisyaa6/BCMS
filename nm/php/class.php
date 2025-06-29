@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $host = 'localhost';
     $user = 'root';
     $pass = '';
-    $db = 'coursework_db';
+    $db   = 'coursework_db';
     $port = 3306;
 
     $connection = new mysqli($host, $user, $pass, $db, $port);
@@ -16,20 +16,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Connection failed: " . $connection->connect_error);
     }
 
-    $cid = $_POST['cid'];
-    $student_id = $_SESSION['user']['SID'];
+    $cid = intval($_POST['cid']);  // force int for safety
+    $sid = $_SESSION['user']['SID'];
 
-    $query = $connection->prepare("UPDATE Student SET CID = ? WHERE SID = ?");
-    $query->bind_param("ii", $cid, $student_id);
+    $stmt = $connection->prepare("UPDATE Student SET CID = ? WHERE SID = ?");
+    $stmt->bind_param("ii", $cid, $sid);
 
-    if ($query->execute()) {
-        header("Location: ../public/dashboard.html");
+    if ($stmt->execute()) {
+        // Optionally update session so it reflects new class
+        $_SESSION['user']['CID'] = $cid;
+        header("Location: shome.php"); // or full path if needed
         exit;
     } else {
         echo "❌ Failed to update class.";
     }
 
-    $query->close();
+    $stmt->close();
     $connection->close();
 } else {
     echo "Invalid request.";

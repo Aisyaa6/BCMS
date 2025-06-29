@@ -45,7 +45,7 @@ $res = $conn->query("
     JOIN Student ON Student.CID = Class.CID
     LEFT JOIN Student_TK ON Student_TK.TKID = Task.TKID AND Student_TK.SID = Student.SID
     WHERE Student.SID = $sid
-    ORDER BY Task.TKID DESC
+    ORDER BY Task.TKID ASC
 ");
 $tasks = $res->fetch_all(MYSQLI_ASSOC);
 ?>
@@ -84,6 +84,19 @@ $tasks = $res->fetch_all(MYSQLI_ASSOC);
     <a href="shome.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
     <a href="schecklist.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-check-square-o fa-fw"></i> Checklist</a>
     <a href="sdrafts.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-upload fa-fw"></i> Drafts</a>
+    <a href="../php/logout.php" 
+    class="w3-bar-item w3-button w3-padding">
+   <i class="fa fa-sign-out fa-fw"></i> Logout
+   </a>
+   
+    <div class="w3-bar w3-card w3-left-align w3-large" style="background-color: #003366; color: white;">
+   
+
+
+ 
+
+</div>
+
   </div>
 </nav>
 

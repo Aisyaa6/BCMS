@@ -67,6 +67,10 @@ while ($row = $res->fetch_assoc()) {
     <a href="shome.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
     <a href="schecklist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-check-square-o fa-fw"></i> Checklist</a>
     <a href="sdrafts.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-upload fa-fw"></i> Drafts</a>
+    <a href="../php/logout.php" 
+    class="w3-bar-item w3-button w3-padding">
+   <i class="fa fa-sign-out fa-fw"></i> Logout
+   </a>
   </div>
 </nav>
 

@@ -1,205 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>W3.CSS Template</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title>W3.CSS Template</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <style>
-        body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
-        .w3-bar,h1,button {font-family: "Montserrat", sans-serif}
-        .fa-anchor,.fa-coffee {font-size:200px}
-
-        /* The Modal (background) */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        }
-
-        /* Modal Content */
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-        }
-
-        /* The Close Button */
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
+  <style>
+    body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
+    .w3-bar,h1,button {font-family: "Montserrat", sans-serif}
+    .fa-anchor,.fa-coffee {font-size:200px}
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .close:hover, .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .tablink.active-tab {
+      background-color: white !important;
+      color: #003366 !important;
+    }
+  </style>
 </head>
 <body>
 
 <!-- Navbar -->
 <div class="w3-top">
-  <div class="w3-bar w3-red w3-card w3-left-align w3-large">
-    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-    <a href="#" class="w3-bar-item w3-button w3-padding-large w3-white">HOME</a>
-
-    <!-- LOGIN triggers modal and opens Login tab -->
-    <a href="javascript:void(0);" 
-       onclick="document.getElementById('id01').style.display='block'; openTab(event, 'Login');" 
-       class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">LOGIN</a>
-
-    <!-- SIGN UP triggers modal and opens Signup tab -->
-    <a href="javascript:void(0);" 
-       onclick="document.getElementById('id01').style.display='block'; openTab(event, 'Signup');" 
-       class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">SIGN UP</a>
+  <div class="w3-bar w3-card w3-left-align w3-large" style="background-color: #003366; color: white;">
+    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-light-grey w3-large" 
+       href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <a href="javascript:void(0);"
+       onclick="document.getElementById('id01').style.display='block'; openTab(event, 'Login');"
+       class="w3-bar-item w3-button w3-padding-large w3-hover-white w3-text-white">LOGIN</a>
+    <a href="javascript:void(0);"
+       onclick="document.getElementById('id01').style.display='block'; openTab(event, 'Signup');"
+       class="w3-bar-item w3-button w3-padding-large w3-hover-white w3-text-white">SIGN UP</a>
   </div>
 </div>
 
-
-</div>
-
 <!-- Header -->
-<header class="w3-container w3-red w3-center" style="padding:128px 16px">
+<header class="w3-container w3-blue w3-center" style="padding:128px 16px">
   <h1 class="w3-margin w3-jumbo">BUSINESS COURSEWORK SYSTEM MANAGEMENT</h1>
   <p class="w3-xlarge">SMK SUNGAI LIMAU</p>
 </header>
 
-<!-- Modal with Login & Signup Tabs -->
+<!-- Modal -->
 <div id="id01" class="w3-modal" style="z-index:9999;">
   <div class="w3-modal-content w3-card-4" style="max-width:500px">
-
-    <div class="w3-bar w3-red">
-      <button class="w3-bar-item w3-button tablink w3-white" onclick="openTab(event, 'Login')">Login</button>
-      <button class="w3-bar-item w3-button tablink" onclick="openTab(event, 'Signup')">Sign Up</button>
-      <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-right w3-hover-white">&times;</span>
+    
+    <!-- Modal Top Bar -->
+    <div class="w3-bar" style="background-color: #003366; color: white;">
+      <button class="w3-bar-item w3-button tablink w3-hover-light-grey" 
+              style="background-color: #003366; color: white;" 
+              onclick="openTab(event, 'Login')">Login</button>
+      <button class="w3-bar-item w3-button tablink w3-hover-light-grey" 
+              style="background-color: #003366; color: white;" 
+              onclick="openTab(event, 'Signup')">Sign Up</button>
+      <span onclick="document.getElementById('id01').style.display='none'" 
+            class="w3-button w3-right w3-hover-white" 
+            style="color:white;">&times;</span>
     </div>
 
-    <div id="Login" class="w3-container tab w3-padding" style="display:block;background:#fff;">
-  <form action="../php/login.php" method="post">
-    <label><b>Email</b></label>
-    <input class="w3-input w3-border w3-margin-bottom" type="email" name="email" required>
+    <!-- Login Form -->
+    <div id="Login" class="w3-container tab w3-padding" style="display:block; background:#fff;">
+      <form action="../php/login.php" method="post">
+        <label><b>Email</b></label>
+        <input class="w3-input w3-border w3-margin-bottom" type="email" name="email" required>
+        <label><b>Password</b></label>
+        <input class="w3-input w3-border w3-margin-bottom" type="password" name="password" required>
+        <label><b>Login as:</b></label>
+        <select class="w3-select w3-border w3-margin-bottom" name="role" required>
+          <option value="student">Student</option>
+          <option value="teacher">Teacher</option>
+        </select>
+        <button class="w3-button w3-blue w3-margin-top w3-block" type="submit">Login</button>
+      </form>
+    </div>
 
-    <label><b>Password</b></label>
-    <input class="w3-input w3-border w3-margin-bottom" type="password" name="password" required>
-
-    <label><b>Login as:</b></label>
-    <select class="w3-select w3-border w3-margin-bottom" name="role" required>
-      <option value="student">Student</option>
-      <option value="teacher">Teacher</option>
-    </select>
-
-    <button class="w3-button w3-red w3-margin-top w3-block" type="submit">Login</button>
-  </form>
-</div>
-
-
-    <div id="Signup" class="w3-container tab w3-padding" style="display:none;background:#fff;">
-  <form action="../php/signup.php" method="post">
-    <label><b>Username</b></label>
-    <input class="w3-input w3-border w3-margin-bottom" type="text" name="username" required>
-
-    <label><b>Email</b></label>
-    <input class="w3-input w3-border w3-margin-bottom" type="email" name="email" required>
-
-    <label><b>Password</b></label>
-    <input class="w3-input w3-border w3-margin-bottom" type="password" name="password" required>
-
-    <label><b>Register as:</b></label>
-    <select class="w3-select w3-border w3-margin-bottom" name="role" required>
-      <option value="student">Student</option>
-      <option value="teacher">Teacher</option>
-    </select>
-
-    <button class="w3-button w3-red w3-margin-top w3-block" type="submit">Sign Up</button>
-  </form>
-</div>
-
+    <!-- Signup Form -->
+    <div id="Signup" class="w3-container tab w3-padding" style="display:none; background:#fff;">
+      <form action="../php/signup.php" method="post">
+        <label><b>Username</b></label>
+        <input class="w3-input w3-border w3-margin-bottom" type="text" name="username" required>
+        <label><b>Email</b></label>
+        <input class="w3-input w3-border w3-margin-bottom" type="email" name="email" required>
+        <label><b>Password</b></label>
+        <input class="w3-input w3-border w3-margin-bottom" type="password" name="password" required>
+        <label><b>Register as:</b></label>
+        <select class="w3-select w3-border w3-margin-bottom" name="role" required>
+          <option value="student">Student</option>
+          <option value="teacher">Teacher</option>
+        </select>
+        <button class="w3-button w3-blue w3-margin-top w3-block" type="submit">Sign Up</button>
+      </form>
+    </div>
 
   </div>
 </div>
 
 
-
-
-<!-- First Grid -->
+<!-- Grid Section -->
 <div class="w3-row-padding w3-padding-64 w3-container">
   <div class="w3-content">
     <div class="w3-twothird">
-      <h1>Manage, Submit & Track Your Business Coursework with Ease.</h1>
-      <h5 class="w3-padding-32">Do Your SPM Business Coursework With Ease!</h5>
-
-      <p class="w3-text-grey">The Business Coursework Hub is a modern and efficient portal for Business subject students and teachers. 
-        This platform allows you to submit assignments, access learning materials, and monitor your progress—all in one place.</p>
+      <h1>Simplify, Submit, and Succeed in Your Business Coursework</h1>
+      <h5 class="w3-padding-32">Designed for SPM Students and Teachers at SMK Sungai Limau for Business Subject</h5>
+      <p class="w3-text-grey">The Business Coursework Hub is your all-in-one platform for managing, submitting, and tracking coursework with ease. 
+        Students can upload drafts, follow task checklists, and monitor feedback — while teachers can assign work, review submissions,
+        and guide student progress efficiently.</p>
     </div>
-
+    
     <div class="w3-third w3-center">
-    <i class="fa fa-anchor w3-padding-64 w3-text-red">
-    </i>
+      <i class="fa fa-anchor w3-padding-64 w3-text-blue"></i>
     </div>
   </div>
 </div>
 
-<div class="w3-container w3-black w3-center w3-opacity w3-padding-64">
-    <h1 class="w3-margin w3-xlarge">Strive for The Best in Business Coursework!</h1>
+<!-- CTA Footer -->
+<div class="w3-container w3-blue w3-center w3-opacity w3-padding-64">
+  <h1 class="w3-margin w3-xlarge">Strive for The Best in Business Coursework!</h1>
 </div>
 
 <!-- Footer -->
 <footer class="w3-container w3-padding-64 w3-center w3-opacity">  
- <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
 </footer>
 
-<!-- JavaScript -->
+<!-- Scripts -->
 <script>
-// Used to toggle the menu on small screens when clicking on the menu button
 function myFunction() {
-    var x = document.getElementById("navDemo");
-    if (x.className.indexOf("w3-show") == -1) {
-        x.className += " w3-show";
-    } else { 
-        x.className = x.className.replace(" w3-show", "");
-    }
+  var x = document.getElementById("navDemo");
+  if (!x) return;
+  x.className.indexOf("w3-show") == -1
+    ? x.className += " w3-show"
+    : x.className = x.className.replace(" w3-show", "");
 }
 
-// Close the modal when clicked outside
 window.onclick = function(event) {
-    var modal = document.getElementById('id01');
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
+  var modal = document.getElementById('id01');
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
 }
 
-</script>
-
-<script>
 function openTab(evt, tabName) {
   var i, x, tablinks;
   x = document.getElementsByClassName("tab");
   for (i = 0; i < x.length; i++) x[i].style.display = "none";
+
   tablinks = document.getElementsByClassName("tablink");
-  for (i = 0; i < x.length; i++) tablinks[i].classList.remove("w3-white");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].classList.remove("active-tab");
+  }
+
   document.getElementById(tabName).style.display = "block";
-  evt.currentTarget.classList.add("w3-white");
+  evt.currentTarget.classList.add("active-tab");
 }
 </script>
-
 
 </body>
 </html>

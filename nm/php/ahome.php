@@ -114,6 +114,13 @@ $progress = $total_ck > 0 ? round(($checked / $total_ck) * 100) : 0;
     <a href="astudents.php" class="w3-bar-item w3-button w3-padding">
       <i class="fa fa-users fa-fw"></i> Students
     </a>
+
+    <a href="../php/logout.php" 
+    class="w3-bar-item w3-button w3-padding">
+   <i class="fa fa-sign-out fa-fw"></i> Logout
+   </a>
+
+   
   </div>
 </nav>
 
