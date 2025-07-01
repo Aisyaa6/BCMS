@@ -42,6 +42,7 @@ while ($c = $class_q->fetch_assoc()) {
         $progress = $total > 0 ? round(($ticked / $total) * 100) : 0;
 
         $students[] = [
+            'sid' => $sid,
             'name' => $s['name'],
             'email' => $s['email'],
             'drafts' => $drafts,
@@ -49,7 +50,7 @@ while ($c = $class_q->fetch_assoc()) {
         ];
     }
 
-    $classes[] = ['name' => $class_name, 'students' => $students];
+    $classes[] = ['cid' => $cid, 'name' => $class_name, 'students' => $students];
 }
 ?>
 
@@ -63,6 +64,20 @@ while ($c = $class_q->fetch_assoc()) {
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}</style>
+    <script>
+    function confirmClearAll(cid) {
+        const password = prompt("Enter your password to confirm deletion of all students in this class:");
+        if (password === null || password === "") return false;
+
+        const form = document.getElementById("clear-form-" + cid);
+        const hidden = document.createElement("input");
+        hidden.type = "hidden";
+        hidden.name = "password";
+        hidden.value = password;
+        form.appendChild(hidden);
+        return true;
+    }
+    </script>
 </head>
 <body class="w3-light-grey">
 
@@ -82,11 +97,7 @@ while ($c = $class_q->fetch_assoc()) {
         <a href="achecklist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-check-square-o fa-fw"></i> Checklist</a>
         <a href="adrafts.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-upload fa-fw"></i> Drafts</a>
         <a href="astudents.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i> Students</a>
-        <a href="../php/logout.php" 
-    class="w3-bar-item w3-button w3-padding">
-   <i class="fa fa-sign-out fa-fw"></i> Logout
-   </a>
-   
+        <a href="../php/logout.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
     </div>
 </nav>
 
@@ -108,6 +119,7 @@ while ($c = $class_q->fetch_assoc()) {
                         <th>Email</th>
                         <th>Drafts Submitted</th>
                         <th>Checklist Progress</th>
+                        <th>Actions</th>
                     </tr>
                     <?php foreach ($class['students'] as $stu): ?>
                         <tr>
@@ -116,15 +128,24 @@ while ($c = $class_q->fetch_assoc()) {
                             <td><?= $stu['drafts'] ?></td>
                             <td>
                                 <div class="w3-light-grey w3-round-xlarge">
-                                    <div class="w3-container w3-green w3-round-xlarge"
-                                         style="width:<?= $stu['progress'] ?>%">
+                                    <div class="w3-container w3-green w3-round-xlarge" style="width:<?= $stu['progress'] ?>%">
                                         <?= $stu['progress'] ?>%
                                     </div>
                                 </div>
                             </td>
+                            <td>
+                                <form method="post" action="../php/delstudent.php" onsubmit="return confirm('Delete this student?');">
+                                    <input type="hidden" name="sid" value="<?= $stu['sid'] ?>">
+                                    <button class="w3-button w3-small w3-red">Delete</button>
+                                </form>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </table>
+                <form method="post" action="../php/delclass.php" id="clear-form-<?= $class['cid'] ?>" onsubmit="return confirmClearAll(<?= $class['cid'] ?>);">
+                    <input type="hidden" name="cid" value="<?= $class['cid'] ?>">
+                    <button class="w3-button w3-small w3-red w3-margin-top">Clear All Students</button>
+                </form>
             </div>
         <?php endforeach; ?>
     </div>

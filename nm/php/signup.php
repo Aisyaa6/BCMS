@@ -29,17 +29,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($query->execute()) {
         if ($role === 'student') {
             $sid = $connection->insert_id;
-
-            // get full student record to store in session
             $result = $connection->query("SELECT * FROM Student WHERE SID = $sid");
             $user = $result->fetch_assoc();
-
             $_SESSION['user'] = $user;
             $_SESSION['role'] = 'student';
-
             header("Location: ../public/class.html");
         } else {
-            header("Location: ../public/index.html");
+            $tid = $connection->insert_id;
+            $result = $connection->query("SELECT * FROM Teacher WHERE TID = $tid");
+            $user = $result->fetch_assoc();
+            $_SESSION['user'] = $user;
+            $_SESSION['role'] = 'teacher';
+            header("Location: ../php/aclass.php");
         }
         exit;
     } else {
