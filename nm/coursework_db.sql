@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 29, 2025 at 05:14 PM
+-- Generation Time: Jul 01, 2025 at 01:44 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -40,7 +40,9 @@ CREATE TABLE `class` (
 INSERT INTO `class` (`CID`, `name`, `TID`) VALUES
 (1, 'Mawar', 2),
 (2, 'Melati', 2),
-(3, 'Melur', 1);
+(3, 'Melur', 1),
+(4, 'Cempaka', 9),
+(5, 'Daun', NULL);
 
 -- --------------------------------------------------------
 
@@ -62,9 +64,7 @@ CREATE TABLE `student` (
 
 INSERT INTO `student` (`SID`, `name`, `email`, `password`, `CID`) VALUES
 (1, 'Saem', 'saem@gg.com', '32250170a0dca92d53ec9624f336ca24', 1),
-(2, 'rin', 'rinrin@gg.com', 'da6523a488577c99148969e5841908ae', 1),
 (10, 'ahmed', 'aamd@gg.com', '803462bd4e7efba58f3674091699720f', 3),
-(17, 'caelus', 'tb@gg.com', '72b8c1ecdb0c1aa5a6e7cd8770cbeffa', 2),
 (18, 'mani', 'mani@gg.com', '6086113edb6ef1feae03a5662dccd6fc', 3);
 
 -- --------------------------------------------------------
@@ -86,11 +86,7 @@ CREATE TABLE `student_tk` (
 INSERT INTO `student_tk` (`TKID`, `SID`, `is_checked`) VALUES
 (1, 10, 1),
 (2, 1, 1),
-(2, 2, 1),
-(2, 17, 1),
-(3, 1, 0),
-(3, 2, 1),
-(3, 17, 0);
+(3, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -113,9 +109,7 @@ CREATE TABLE `submit` (
 INSERT INTO `submit` (`SUBID`, `draft_file`, `comment`, `status`, `SID`) VALUES
 (1, 'assignment1.docx', 'Good', 'Viewed', 1),
 (2, 'PNG_print_1.docx', NULL, 'Pending', 10),
-(3, 'SCHEME OF WORK (20252csc264).docx', 'Good', 'Viewed', 10),
-(4, 'Proposal Template.docx', NULL, 'Pending', 17),
-(5, 'CSC186-ProjectExample.docx', NULL, 'Pending', 2);
+(3, 'SCHEME OF WORK (20252csc264).docx', 'Good', 'Viewed', 10);
 
 -- --------------------------------------------------------
 
@@ -158,7 +152,8 @@ CREATE TABLE `teacher` (
 
 INSERT INTO `teacher` (`TID`, `name`, `email`, `password`) VALUES
 (1, 'Ali', 'ali@gg.com', '984d8144fa08bfc637d2825463e184fa'),
-(2, 'Afzan', 'afz@gg.com', 'ef004bde5174ffe0a1c186c764c8e5a3');
+(2, 'Afzan', 'afz@gg.com', 'ef004bde5174ffe0a1c186c764c8e5a3'),
+(9, 'nrue', 'nue@gg.com', '8f772a129305c2f6991b6b548a0c0147');
 
 --
 -- Indexes for dumped tables
@@ -215,13 +210,13 @@ ALTER TABLE `teacher`
 -- AUTO_INCREMENT for table `class`
 --
 ALTER TABLE `class`
-  MODIFY `CID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `CID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `SID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `SID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `submit`
@@ -239,7 +234,7 @@ ALTER TABLE `task`
 -- AUTO_INCREMENT for table `teacher`
 --
 ALTER TABLE `teacher`
-  MODIFY `TID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `TID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
