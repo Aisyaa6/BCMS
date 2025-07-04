@@ -22,16 +22,35 @@ if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['subid'])) {
     header("Location: adrafts.php"); exit;
 }
 
+// Handle sort option
+$sort = $_GET['sort'] ?? 'newest'; // default: newest first
+switch ($sort) {
+    case 'name_asc':
+        $order_by = "st.name ASC";
+        break;
+    case 'name_desc':
+        $order_by = "st.name DESC";
+        break;
+    case 'class_asc':
+        $order_by = "c.name ASC";
+        break;
+    case 'oldest':
+        $order_by = "s.SUBID ASC";
+        break;
+    default: // newest
+        $order_by = "s.SUBID DESC";
+}
+
 // Fetch submissions
 $sql = "
   SELECT 
     s.SUBID, s.draft_file, s.status, s.comment, s.SID,
-    st.name AS student_name
+    st.name AS student_name, c.name AS class_name
   FROM Submit s
   JOIN Student st ON s.SID=st.SID
   JOIN Class c   ON st.CID=c.CID
   WHERE c.TID=? 
-  ORDER BY s.SUBID DESC
+  ORDER BY $order_by
 ";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i",$teacher_id);
@@ -72,12 +91,11 @@ $result = $stmt->get_result();
     <a href="ahome.php"      class="w3-bar-item w3-button w3-padding"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
     <a href="achecklist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-check-square-o fa-fw"></i> Checklist</a>
     <a href="adrafts.php"    class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-upload fa-fw"></i> Drafts</a>
-    <a href="astudents.php"              class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i> Students</a>
+    <a href="astudents.php"  class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i> Students</a>
     <a href="../php/logout.php" 
-    class="w3-bar-item w3-button w3-padding">
-   <i class="fa fa-sign-out fa-fw"></i> Logout
-   </a>
-   
+       class="w3-bar-item w3-button w3-padding">
+      <i class="fa fa-sign-out fa-fw"></i> Logout
+    </a>
   </div>
 </nav>
 
@@ -89,17 +107,32 @@ $result = $stmt->get_result();
 <div class="w3-main" style="margin-left:300px;margin-top:43px">
   <div class="w3-container" style="padding:22px">
     <h3><i class="fa fa-upload"></i> Draft Submissions</h3>
+    
+    <!-- Sort dropdown -->
+    <form method="get" class="w3-margin-bottom">
+      <label>Sort by:</label>
+      <select name="sort" class="w3-select w3-border" style="width:auto" onchange="this.form.submit()">
+        <option value="newest" <?= $sort==='newest'?'selected':'' ?>>Newest First</option>
+        <option value="oldest" <?= $sort==='oldest'?'selected':'' ?>>Oldest First</option>
+        <option value="name_asc" <?= $sort==='name_asc'?'selected':'' ?>>Name (A-Z)</option>
+        <option value="name_desc" <?= $sort==='name_desc'?'selected':'' ?>>Name (Z-A)</option>
+        <option value="class_asc" <?= $sort==='class_asc'?'selected':'' ?>>Class (A-Z)</option>
+      </select>
+    </form>
+
     <table class="w3-table-all w3-hoverable w3-white">
       <tr class="w3-light-grey">
-        <th>Student</th><th>File</th><th>Feedback</th><th>Status</th><th>Action</th>
+        <th>Student</th><th>Class</th><th>File</th><th>Feedback</th><th>Status</th><th>Action</th>
       </tr>
       <?php while($row=$result->fetch_assoc()): ?>
       <tr>
         <td><?= htmlspecialchars($row['student_name']) ?> (<?= $row['SID'] ?>)</td>
+        <td><?= htmlspecialchars($row['class_name']) ?></td>
         <td>
           <a href="../uploads/<?= urlencode($row['draft_file']) ?>" download>
-            <i class="fa fa-download"></i>
-          </a>
+            <i class="fa fa-download"></i> Download
+          </a><br>
+          <small><?= htmlspecialchars($row['draft_file']) ?></small>
         </td>
         <td>
           <form method="post" style="margin:0">
