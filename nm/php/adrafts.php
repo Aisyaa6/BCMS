@@ -25,20 +25,11 @@ if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['subid'])) {
 // Handle sort option
 $sort = $_GET['sort'] ?? 'newest'; // default: newest first
 switch ($sort) {
-    case 'name_asc':
-        $order_by = "st.name ASC";
-        break;
-    case 'name_desc':
-        $order_by = "st.name DESC";
-        break;
-    case 'class_asc':
-        $order_by = "c.name ASC";
-        break;
-    case 'oldest':
-        $order_by = "s.SUBID ASC";
-        break;
-    default: // newest
-        $order_by = "s.SUBID DESC";
+    case 'name_asc':  $order_by = "st.name ASC"; break;
+    case 'name_desc': $order_by = "st.name DESC"; break;
+    case 'class_asc': $order_by = "c.name ASC"; break;
+    case 'oldest':    $order_by = "s.SUBID ASC"; break;
+    default:          $order_by = "s.SUBID DESC"; // newest
 }
 
 // Fetch submissions
@@ -66,7 +57,18 @@ $result = $stmt->get_result();
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <style>html,body,h1,h2,h3,h4,h5{font-family:"Raleway",sans-serif}</style>
+  <style>
+    html,body,h1,h2,h3,h4,h5{font-family:"Raleway",sans-serif}
+    .w3-modal-content { width: 50%; max-width: 700px; }
+    .modal-textarea { width: 100%; min-height: 150px; resize: vertical; }
+    .filter-header .w3-bar-item {
+      border-bottom: 3px solid transparent;
+    }
+    .filter-header .w3-bar-item.active {
+      border-bottom: 3px solid #2196F3;
+      color: #2196F3;
+    }
+  </style>
 </head>
 <body class="w3-light-grey">
 
@@ -107,7 +109,14 @@ $result = $stmt->get_result();
 <div class="w3-main" style="margin-left:300px;margin-top:43px">
   <div class="w3-container" style="padding:22px">
     <h3><i class="fa fa-upload"></i> Draft Submissions</h3>
-    
+
+    <!-- Filter Header -->
+    <div class="w3-bar w3-light-grey w3-border-bottom filter-header w3-margin-bottom">
+      <button class="w3-bar-item w3-button active" onclick="filterTable('all')">All</button>
+      <button class="w3-bar-item w3-button" onclick="filterTable('Pending')">Pending</button>
+      <button class="w3-bar-item w3-button" onclick="filterTable('Viewed')">Viewed</button>
+    </div>
+
     <!-- Sort dropdown -->
     <form method="get" class="w3-margin-bottom">
       <label>Sort by:</label>
@@ -120,12 +129,12 @@ $result = $stmt->get_result();
       </select>
     </form>
 
-    <table class="w3-table-all w3-hoverable w3-white">
+    <table class="w3-table-all w3-hoverable w3-white" id="draftTable">
       <tr class="w3-light-grey">
-        <th>Student</th><th>Class</th><th>File</th><th>Feedback</th><th>Status</th><th>Action</th>
+        <th>Student</th><th>Class</th><th>File</th><th>Status</th><th>Action</th>
       </tr>
       <?php while($row=$result->fetch_assoc()): ?>
-      <tr>
+      <tr data-status="<?= htmlspecialchars($row['status']) ?>">
         <td><?= htmlspecialchars($row['student_name']) ?></td>
         <td><?= htmlspecialchars($row['class_name']) ?></td>
         <td>
@@ -134,29 +143,43 @@ $result = $stmt->get_result();
           </a><br>
           <small><?= htmlspecialchars($row['draft_file']) ?></small>
         </td>
+        <td><?= htmlspecialchars($row['status']) ?></td>
         <td>
-          <form method="post" style="margin:0">
-            <input type="hidden" name="subid" value="<?= $row['SUBID'] ?>">
-            <textarea name="comment" class="w3-input w3-border"
-                      style="height:60px"><?= htmlspecialchars($row['comment']) ?></textarea>
-        </td>
-        <td>
-            <select name="status" class="w3-select w3-border" style="width:auto">
-              <?php foreach(['Pending','Viewed'] as $st): ?>
-              <option value="<?= $st ?>"
-                <?= $row['status']===$st?'selected':'' ?>>
-                <?= $st ?>
-              </option>
-              <?php endforeach; ?>
-            </select>
-        </td>
-        <td>
-            <button class="w3-button w3-blue" type="submit">Save</button>
-          </form>
+          <button class="w3-button w3-blue w3-round"
+                  onclick="openFeedbackModal(
+                    <?= $row['SUBID'] ?>, 
+                    '<?= htmlspecialchars(addslashes($row['comment'])) ?>',
+                    '<?= $row['status'] ?>')">
+            <i class="fa fa-edit"></i> Edit Feedback
+          </button>
         </td>
       </tr>
       <?php endwhile; ?>
     </table>
+  </div>
+</div>
+
+<!-- Feedback Modal -->
+<div id="feedbackModal" class="w3-modal">
+  <div class="w3-modal-content w3-animate-top w3-card-4">
+    <header class="w3-container w3-blue"> 
+      <span onclick="closeFeedbackModal()" 
+            class="w3-button w3-display-topright">&times;</span>
+      <h4><i class="fa fa-comment"></i> Edit Feedback</h4>
+    </header>
+    <div class="w3-container">
+      <form method="post" id="feedbackForm">
+        <input type="hidden" name="subid" id="modalSubid">
+        <label><b>Comment:</b></label>
+        <textarea name="comment" id="modalComment" class="w3-input w3-border modal-textarea"></textarea>
+        <label><b>Status:</b></label>
+        <select name="status" id="modalStatus" class="w3-select w3-border w3-margin-bottom">
+          <option value="Pending">Pending</option>
+          <option value="Viewed">Viewed</option>
+        </select>
+        <button type="submit" class="w3-button w3-green"><i class="fa fa-save"></i> Save</button>
+      </form>
+    </div>
   </div>
 </div>
 
@@ -168,6 +191,32 @@ function w3_open(){
 function w3_close(){
   document.getElementById("mySidebar").style.display="none";
   document.getElementById("myOverlay").style.display="none";
+}
+
+function openFeedbackModal(subid, comment, status) {
+  document.getElementById('modalSubid').value = subid;
+  document.getElementById('modalComment').value = comment;
+  document.getElementById('modalStatus').value = status;
+  document.getElementById('feedbackModal').style.display = 'block';
+}
+
+function closeFeedbackModal() {
+  document.getElementById('feedbackModal').style.display = 'none';
+}
+
+function filterTable(status) {
+  const rows = document.querySelectorAll("#draftTable tr[data-status]");
+  rows.forEach(row => {
+    if (status === 'all' || row.getAttribute('data-status') === status) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+
+  const buttons = document.querySelectorAll(".filter-header .w3-bar-item");
+  buttons.forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
 }
 </script>
 </body>
