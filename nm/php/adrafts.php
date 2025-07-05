@@ -44,7 +44,7 @@ switch ($sort) {
 // Fetch submissions
 $sql = "
   SELECT 
-    s.SUBID, s.draft_file, s.status, s.comment, s.SID,
+    s.SUBID, s.draft_file, s.status, s.comment,
     st.name AS student_name, c.name AS class_name
   FROM Submit s
   JOIN Student st ON s.SID=st.SID
@@ -126,10 +126,10 @@ $result = $stmt->get_result();
       </tr>
       <?php while($row=$result->fetch_assoc()): ?>
       <tr>
-        <td><?= htmlspecialchars($row['student_name']) ?> (<?= $row['SID'] ?>)</td>
+        <td><?= htmlspecialchars($row['student_name']) ?></td>
         <td><?= htmlspecialchars($row['class_name']) ?></td>
         <td>
-          <a href="../uploads/<?= urlencode($row['draft_file']) ?>" download>
+          <a href="download.php?file=<?= urlencode($row['draft_file']) ?>" class="w3-button w3-white w3-border w3-round">
             <i class="fa fa-download"></i> Download
           </a><br>
           <small><?= htmlspecialchars($row['draft_file']) ?></small>

@@ -31,6 +31,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['draft_file'])) {
     }
 }
 
+// Handle delete
+if (isset($_GET['delete'])) {
+    $subid = intval($_GET['delete']);
+    $res = $conn->query("SELECT draft_file FROM Submit WHERE SUBID=$subid AND SID=$sid");
+    if ($res && $res->num_rows === 1) {
+        $row = $res->fetch_assoc();
+        $filepath = realpath(__DIR__ . "/../uploads/" . $row['draft_file']);
+        if (file_exists($filepath)) unlink($filepath); // Delete file
+        $conn->query("DELETE FROM Submit WHERE SUBID=$subid AND SID=$sid");
+        echo "<script>alert('✅ Draft deleted.'); window.location.href='sdrafts.php';</script>";
+        exit;
+    } else {
+        echo "<script>alert('❌ Draft not found.');</script>";
+    }
+}
+
 // Load submissions grouped by status
 $submissions = ['Pending' => [], 'Viewed' => []];
 $res = $conn->query("SELECT * FROM Submit WHERE SID=$sid ORDER BY SUBID ASC");
@@ -47,7 +63,22 @@ while ($row = $res->fetch_assoc()) {
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <style>html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}</style>
+  <style>
+    html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+    /* Make modal box larger */
+    .w3-modal-content {
+      width: 60%; /* wider */
+      max-width: 800px;
+    }
+    #commentContent {
+      min-height: 200px;  /* taller */
+      max-height: 400px;
+      overflow-y: auto;   /* scroll if long */
+      padding: 16px;
+      background: #f9f9f9;
+      border-radius: 4px;
+    }
+  </style>
 </head>
 <body class="w3-light-grey">
 
@@ -101,18 +132,49 @@ while ($row = $res->fetch_assoc()) {
             <th>File</th>
             <th>Status</th>
             <th>Comment</th>
+            <th>Action</th>
           </tr>
           <?php foreach ($submissions[$status] as $row): ?>
             <tr>
               <td><?= $row['SUBID'] ?></td>
-              <td><a href="../uploads/<?= urlencode($row['draft_file']) ?>" download><?= htmlspecialchars($row['draft_file']) ?></a></td>
+              <td>
+                <a href="../uploads/<?= urlencode($row['draft_file']) ?>" download>
+                  <?= htmlspecialchars($row['draft_file']) ?>
+                </a>
+              </td>
               <td><?= $row['status'] ?></td>
-              <td><?= htmlspecialchars($row['comment']) ?></td>
+              <td>
+                <button onclick="showCommentModal('<?= htmlspecialchars(addslashes($row['comment'])) ?>')" 
+                        class="w3-button w3-green w3-round">
+                  <i class="fa fa-eye"></i> View Comment
+                </button>
+              </td>
+              <td>
+                <a href="sdrafts.php?delete=<?= $row['SUBID'] ?>"
+                   onclick="return confirm('Are you sure you want to delete this draft?');"
+                   class="w3-button w3-red w3-round">
+                   <i class="fa fa-trash"></i> Delete
+                </a>
+              </td>
             </tr>
           <?php endforeach; ?>
         </table>
       <?php endif; ?>
     <?php endforeach; ?>
+  </div>
+</div>
+
+<!-- Comment Modal -->
+<div id="commentModal" class="w3-modal">
+  <div class="w3-modal-content w3-animate-top w3-card-4">
+    <header class="w3-container w3-blue"> 
+      <span onclick="closeCommentModal()" 
+            class="w3-button w3-display-topright">&times;</span>
+      <h4><i class="fa fa-comment"></i> Teacher Comment</h4>
+    </header>
+    <div class="w3-container" id="commentContent">
+      <!-- Comment content will be injected here -->
+    </div>
   </div>
 </div>
 
@@ -124,6 +186,15 @@ function w3_open() {
 function w3_close() {
   document.getElementById("mySidebar").style.display = "none";
   document.getElementById("myOverlay").style.display = "none";
+}
+
+function showCommentModal(comment) {
+  document.getElementById('commentContent').innerText = comment || "No comment provided.";
+  document.getElementById('commentModal').style.display = 'block';
+}
+
+function closeCommentModal() {
+  document.getElementById('commentModal').style.display = 'none';
 }
 </script>
 </body>

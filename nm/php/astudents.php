@@ -27,9 +27,15 @@ while ($c = $class_q->fetch_assoc()) {
     while ($s = $student_q->fetch_assoc()) {
         $sid = $s['SID'];
 
-        // Count drafts
-        $draft_q = $conn->query("SELECT COUNT(*) AS total FROM Submit WHERE SID = $sid");
-        $drafts = $draft_q->fetch_assoc()['total'] ?? 0;
+        // Fetch drafts for this student
+        $draft_q = $conn->query("SELECT * FROM Submit WHERE SID = $sid");
+        $drafts = [];
+        while ($d = $draft_q->fetch_assoc()) {
+            $drafts[] = [
+                'filename' => htmlspecialchars($d['draft_file']), // FIXED: use draft_file column
+                'file_path' => "../uploads/" . htmlspecialchars($d['draft_file'])
+            ];
+        }
 
         // Count tasks progress
         $tick_q = $conn->query("SELECT COUNT(*) AS ticked FROM Student_TK WHERE SID = $sid AND is_checked = 1");
@@ -64,7 +70,17 @@ while ($c = $class_q->fetch_assoc()) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
-        .w3-modal-content {max-width: 500px;}
+        .w3-modal-content {max-width: 600px;}
+        .draft-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .draft-filename {
+            overflow-wrap: anywhere;
+        }
     </style>
 </head>
 <body class="w3-light-grey">
@@ -83,7 +99,8 @@ while ($c = $class_q->fetch_assoc()) {
         <div id="modalProgress" class="w3-container w3-green w3-round" style="width:0%">0%</div>
       </div>
       <hr>
-      <p><b>Drafts Submitted:</b> <span id="modalDrafts"></span></p>
+      <p><b>All Drafts Uploaded:</b> <span id="modalDraftsCount"></span></p>
+      <div id="modalDraftsList"></div>
     </div>
   </div>
 </div>
@@ -182,7 +199,25 @@ function openModal(student) {
   document.getElementById('modalEmail').innerText = student.email;
   document.getElementById('modalProgress').style.width = student.progress + '%';
   document.getElementById('modalProgress').innerText = student.progress + '%';
-  document.getElementById('modalDrafts').innerText = student.drafts + ' draft(s)';
+
+  document.getElementById('modalDraftsCount').innerText = student.drafts.length;
+
+  let draftHTML = '';
+  if (student.drafts.length > 0) {
+    student.drafts.forEach(d => {
+      draftHTML += `
+        <div class="draft-row">
+          <span class="draft-filename">${d.filename}</span>
+          <a href="${d.file_path}" download class="w3-button w3-white w3-border w3-round">
+            <i class="fa fa-download"></i>
+          </a>
+        </div>`;
+    });
+  } else {
+    draftHTML = '<p class="w3-text-grey">No drafts submitted.</p>';
+  }
+  document.getElementById('modalDraftsList').innerHTML = draftHTML;
+
   document.getElementById('studentModal').style.display = 'block';
 }
 
@@ -205,14 +240,12 @@ function confirmAction() {
   const password = document.getElementById('confirmPassword').value;
 
   if (actionType === 'remove') {
-    // Send POST request to remove student
     fetch('../php/remove_student.php', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({sid: targetId, password: password})
     }).then(res => location.reload());
   } else if (actionType === 'clear') {
-    // Send POST request to clear class
     fetch('../php/clear_class.php', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -223,6 +256,5 @@ function confirmAction() {
   closePasswordModal();
 }
 </script>
-
 </body>
 </html>
