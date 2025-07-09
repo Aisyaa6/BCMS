@@ -65,15 +65,11 @@ while ($row = $res->fetch_assoc()) {
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
     html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
-    /* Make modal box larger */
-    .w3-modal-content {
-      width: 60%; /* wider */
-      max-width: 800px;
-    }
+    .w3-modal-content { width: 60%; max-width: 800px; }
     #commentContent {
-      min-height: 200px;  /* taller */
+      min-height: 200px;
       max-height: 400px;
-      overflow-y: auto;   /* scroll if long */
+      overflow-y: auto;
       padding: 16px;
       background: #f9f9f9;
       border-radius: 4px;
@@ -98,16 +94,11 @@ while ($row = $res->fetch_assoc()) {
     <a href="shome.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
     <a href="schecklist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-check-square-o fa-fw"></i> Checklist</a>
     <a href="sdrafts.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-upload fa-fw"></i> Drafts</a>
-    <a href="../php/logout.php" 
-    class="w3-bar-item w3-button w3-padding">
-   <i class="fa fa-sign-out fa-fw"></i> Logout
-   </a>
+    <a href="../php/logout.php" class="w3-bar-item w3-button w3-padding">
+      <i class="fa fa-sign-out fa-fw"></i> Logout
+    </a>
   </div>
 </nav>
-
-<!-- Overlay -->
-<div class="w3-overlay w3-hide-large w3-animate-opacity"
-     onclick="w3_close()" style="cursor:pointer" title="close menu" id="myOverlay"></div>
 
 <!-- Page Content -->
 <div class="w3-main" style="margin-left:300px;margin-top:43px">
@@ -128,7 +119,6 @@ while ($row = $res->fetch_assoc()) {
         <h5><?= $status ?> Drafts</h5>
         <table class="w3-table-all w3-hoverable w3-white w3-margin-bottom">
           <tr class="w3-light-grey">
-            <th>#</th>
             <th>File</th>
             <th>Status</th>
             <th>Comment</th>
@@ -136,7 +126,6 @@ while ($row = $res->fetch_assoc()) {
           </tr>
           <?php foreach ($submissions[$status] as $row): ?>
             <tr>
-              <td><?= $row['SUBID'] ?></td>
               <td>
                 <a href="../uploads/<?= urlencode($row['draft_file']) ?>" download>
                   <?= htmlspecialchars($row['draft_file']) ?>
@@ -168,8 +157,7 @@ while ($row = $res->fetch_assoc()) {
 <div id="commentModal" class="w3-modal">
   <div class="w3-modal-content w3-animate-top w3-card-4">
     <header class="w3-container w3-blue"> 
-      <span onclick="closeCommentModal()" 
-            class="w3-button w3-display-topright">&times;</span>
+      <span onclick="closeCommentModal()" class="w3-button w3-display-topright">&times;</span>
       <h4><i class="fa fa-comment"></i> Teacher Comment</h4>
     </header>
     <div class="w3-container" id="commentContent">
@@ -179,20 +167,10 @@ while ($row = $res->fetch_assoc()) {
 </div>
 
 <script>
-function w3_open() {
-  document.getElementById("mySidebar").style.display = "block";
-  document.getElementById("myOverlay").style.display = "block";
-}
-function w3_close() {
-  document.getElementById("mySidebar").style.display = "none";
-  document.getElementById("myOverlay").style.display = "none";
-}
-
 function showCommentModal(comment) {
   document.getElementById('commentContent').innerText = comment || "No comment provided.";
   document.getElementById('commentModal').style.display = 'block';
 }
-
 function closeCommentModal() {
   document.getElementById('commentModal').style.display = 'none';
 }

@@ -3,33 +3,34 @@ session_start();
 if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'teacher') {
     die("Unauthorized access.");
 }
+
 $teacher      = $_SESSION['user'];
 $teacher_id   = $teacher['TID'];
 $teacher_name = htmlspecialchars($teacher['name']);
 
-$conn = new mysqli('localhost','root','','coursework_db',3306);
-if ($conn->connect_error) die("Connection failed: ".$conn->connect_error);
+$conn = new mysqli('localhost', 'root', '', 'coursework_db', 3306);
+if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
 
 // Handle updates
-if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['subid'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['subid'])) {
     $subid   = intval($_POST['subid']);
     $status  = $conn->real_escape_string($_POST['status']);
     $comment = $conn->real_escape_string($_POST['comment']);
     $stmt = $conn->prepare("UPDATE Submit SET status=?, comment=? WHERE SUBID=?");
-    $stmt->bind_param("ssi",$status,$comment,$subid);
+    $stmt->bind_param("ssi", $status, $comment, $subid);
     $stmt->execute();
     $stmt->close();
     header("Location: adrafts.php"); exit;
 }
 
 // Handle sort option
-$sort = $_GET['sort'] ?? 'newest'; // default: newest first
+$sort = $_GET['sort'] ?? 'newest'; // default sort
 switch ($sort) {
-    case 'name_asc':  $order_by = "st.name ASC"; break;
-    case 'name_desc': $order_by = "st.name DESC"; break;
-    case 'class_asc': $order_by = "c.name ASC"; break;
-    case 'oldest':    $order_by = "s.SUBID ASC"; break;
-    default:          $order_by = "s.SUBID DESC"; // newest
+    case 'name_asc':  $order_by = "LOWER(st.name) ASC"; break; // A-Z case-insensitive
+    case 'name_desc': $order_by = "LOWER(st.name) DESC"; break; // Z-A case-insensitive
+    case 'class_asc': $order_by = "LOWER(c.name) ASC"; break; // Class A-Z
+    case 'oldest':    $order_by = "s.SUBID ASC"; break; // Oldest first
+    default:          $order_by = "s.SUBID DESC"; // Newest first
 }
 
 // Fetch submissions
@@ -38,13 +39,13 @@ $sql = "
     s.SUBID, s.draft_file, s.status, s.comment,
     st.name AS student_name, c.name AS class_name
   FROM Submit s
-  JOIN Student st ON s.SID=st.SID
-  JOIN Class c   ON st.CID=c.CID
-  WHERE c.TID=? 
+  JOIN Student st ON s.SID = st.SID
+  JOIN Class c    ON st.CID = c.CID
+  WHERE c.TID = ?
   ORDER BY $order_by
 ";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i",$teacher_id);
+$stmt->bind_param("i", $teacher_id);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -58,7 +59,7 @@ $result = $stmt->get_result();
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
-    html,body,h1,h2,h3,h4,h5{font-family:"Raleway",sans-serif}
+    html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     .w3-modal-content { width: 50%; max-width: 700px; }
     .modal-textarea { width: 100%; min-height: 150px; resize: vertical; }
     .filter-header .w3-bar-item {
@@ -121,11 +122,11 @@ $result = $stmt->get_result();
     <form method="get" class="w3-margin-bottom">
       <label>Sort by:</label>
       <select name="sort" class="w3-select w3-border" style="width:auto" onchange="this.form.submit()">
-        <option value="newest" <?= $sort==='newest'?'selected':'' ?>>Newest First</option>
-        <option value="oldest" <?= $sort==='oldest'?'selected':'' ?>>Oldest First</option>
-        <option value="name_asc" <?= $sort==='name_asc'?'selected':'' ?>>Name (A-Z)</option>
-        <option value="name_desc" <?= $sort==='name_desc'?'selected':'' ?>>Name (Z-A)</option>
-        <option value="class_asc" <?= $sort==='class_asc'?'selected':'' ?>>Class (A-Z)</option>
+        <option value="newest" <?= $sort==='newest' ? 'selected' : '' ?>>Newest First</option>
+        <option value="oldest" <?= $sort==='oldest' ? 'selected' : '' ?>>Oldest First</option>
+        <option value="name_asc" <?= $sort==='name_asc' ? 'selected' : '' ?>>Name (A-Z)</option>
+        <option value="name_desc" <?= $sort==='name_desc' ? 'selected' : '' ?>>Name (Z-A)</option>
+        <option value="class_asc" <?= $sort==='class_asc' ? 'selected' : '' ?>>Class (A-Z)</option>
       </select>
     </form>
 
@@ -133,7 +134,7 @@ $result = $stmt->get_result();
       <tr class="w3-light-grey">
         <th>Student</th><th>Class</th><th>File</th><th>Status</th><th>Action</th>
       </tr>
-      <?php while($row=$result->fetch_assoc()): ?>
+      <?php while($row = $result->fetch_assoc()): ?>
       <tr data-status="<?= htmlspecialchars($row['status']) ?>">
         <td><?= htmlspecialchars($row['student_name']) ?></td>
         <td><?= htmlspecialchars($row['class_name']) ?></td>
