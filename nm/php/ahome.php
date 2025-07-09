@@ -53,24 +53,39 @@ $res = $conn->query("
 ");
 $submitted = $res->fetch_assoc()['total'] ?? 0;
 
-// 5. Student progress = (checked tasks) / (total tasks) for this teacher
-$res = $conn->query("
-    SELECT COUNT(*) AS checked 
-    FROM Student_TK 
-    JOIN Task ON Student_TK.TKID = Task.TKID
-    WHERE Task.TID = $tid AND Student_TK.is_checked = 1
-");
-$checked = $res->fetch_assoc()['checked'] ?? 0;
+// 5. Fetch progress for each class separately
+$class_progress = [];
+$res = $conn->query("SELECT CID, name FROM Class WHERE TID = $tid");
+while ($row = $res->fetch_assoc()) {
+    $cid = $row['CID'];
+    $class_name = $row['name'];
 
-$res = $conn->query("
-    SELECT COUNT(*) AS total 
-    FROM Student_TK 
-    JOIN Task ON Student_TK.TKID = Task.TKID
-    WHERE Task.TID = $tid
-");
-$total_ck = $res->fetch_assoc()['total'] ?? 0;
+    // Count checked tasks
+    $checked_res = $conn->query("
+        SELECT COUNT(*) AS checked 
+        FROM Student_TK 
+        JOIN Student ON Student_TK.SID = Student.SID
+        JOIN Task ON Student_TK.TKID = Task.TKID
+        WHERE Task.TID = $tid AND Student.CID = $cid AND Student_TK.is_checked = 1
+    ");
+    $checked = $checked_res->fetch_assoc()['checked'] ?? 0;
 
-$progress = $total_ck > 0 ? round(($checked / $total_ck) * 100) : 0;
+    // Count total tasks
+    $total_res = $conn->query("
+        SELECT COUNT(*) AS total
+        FROM Student_TK 
+        JOIN Student ON Student_TK.SID = Student.SID
+        JOIN Task ON Student_TK.TKID = Task.TKID
+        WHERE Task.TID = $tid AND Student.CID = $cid
+    ");
+    $total = $total_res->fetch_assoc()['total'] ?? 0;
+
+    $progress = $total > 0 ? round(($checked / $total) * 100) : 0;
+    $class_progress[] = [
+        'name' => $class_name,
+        'progress' => $progress
+    ];
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -119,8 +134,6 @@ $progress = $total_ck > 0 ? round(($checked / $total_ck) * 100) : 0;
     class="w3-bar-item w3-button w3-padding">
    <i class="fa fa-sign-out fa-fw"></i> Logout
    </a>
-
-   
   </div>
 </nav>
 
@@ -173,11 +186,17 @@ $progress = $total_ck > 0 ? round(($checked / $total_ck) * 100) : 0;
 
   <hr>
   <div class="w3-container">
-    <h5>Students Progress</h5>
-    <div class="w3-grey">
-      <div class="w3-container w3-center w3-padding w3-green"
-           style="width:<?= $progress ?>%"><?= $progress ?>%</div>
-    </div>
+    <h5>Classes Progress</h5>
+    <?php foreach ($class_progress as $cp): ?>
+        <p><b><?= htmlspecialchars($cp['name']) ?></b></p>
+        <div class="w3-grey w3-round">
+            <div class="w3-container w3-green w3-round"
+                 style="width:<?= $cp['progress'] ?>%">
+                <?= $cp['progress'] ?>%
+            </div>
+        </div>
+        <br>
+    <?php endforeach; ?>
   </div>
 
 </div>

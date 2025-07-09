@@ -120,17 +120,15 @@ $tasks = $conn->query("SELECT * FROM Task WHERE TID = $teacher_id ORDER BY TKID 
     </form>
 
     <hr>
-    <h4>Existing Tasks</h4>
+    <h4>Checklist</h4>
     <table class="w3-table-all w3-hoverable w3-white">
         <tr class="w3-light-grey">
-            <th>ID</th>
             <th>Task Name</th>
             <th>Description</th>
             <th>Action</th>
         </tr>
         <?php while ($row = $tasks->fetch_assoc()): ?>
             <tr>
-                <td><?= $row['TKID'] ?></td>
                 <td><?= htmlspecialchars($row['name']) ?></td>
                 <td><?= htmlspecialchars($row['TK_desc']) ?></td>
                 <td>

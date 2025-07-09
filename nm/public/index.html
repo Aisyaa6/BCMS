@@ -13,35 +13,6 @@
     body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     .w3-bar,h1,button {font-family: "Montserrat", sans-serif}
     .fa-anchor,.fa-coffee {font-size:200px}
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.4);
-    }
-    .modal-content {
-      background-color: #fefefe;
-      margin: 15% auto;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 80%;
-    }
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-    .close:hover, .close:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-    }
     .tablink.active-tab {
       background-color: white !important;
       color: #003366 !important;
@@ -68,7 +39,7 @@
 
 <!-- Header -->
 <header class="w3-container w3-blue w3-center" style="padding:128px 16px">
-  <h1 class="w3-margin w3-jumbo">BUSINESS COURSEWORK SYSTEM MANAGEMENT</h1>
+  <h1 class="w3-margin w3-jumbo">BUSINESS COURSEWORK MANAGEMENT SYSTEM</h1>
   <p class="w3-xlarge">SMK SUNGAI LIMAU</p>
 </header>
 
@@ -107,25 +78,26 @@
 
     <!-- Signup Form -->
     <div id="Signup" class="w3-container tab w3-padding" style="display:none; background:#fff;">
+      <h2 class="w3-center" style="color:#003366;">Student Registration</h2>
+      <p class="w3-center w3-text-grey">This signup is for <b>students only</b></p>
       <form action="../php/signup.php" method="post">
         <label><b>Username</b></label>
-        <input class="w3-input w3-border w3-margin-bottom" type="text" name="username" required>
+        <input class="w3-input w3-border w3-margin-bottom" type="text" name="username" placeholder="Enter your name" required>
+        
         <label><b>Email</b></label>
-        <input class="w3-input w3-border w3-margin-bottom" type="email" name="email" required>
+        <input class="w3-input w3-border w3-margin-bottom" type="email" name="email" placeholder="Enter your email" required>
+        
         <label><b>Password</b></label>
-        <input class="w3-input w3-border w3-margin-bottom" type="password" name="password" required>
-        <label><b>Register as:</b></label>
-        <select class="w3-select w3-border w3-margin-bottom" name="role" required>
-          <option value="student">Student</option>
-          <option value="teacher">Teacher</option>
-        </select>
-        <button class="w3-button w3-blue w3-margin-top w3-block" type="submit">Sign Up</button>
+        <input class="w3-input w3-border w3-margin-bottom" type="password" name="password" placeholder="Create a password" required>
+        
+        <!-- Force student role -->
+        <input type="hidden" name="role" value="student">
+        
+        <button class="w3-button w3-blue w3-margin-top w3-block" type="submit">Sign Up as Student</button>
       </form>
     </div>
-
   </div>
 </div>
-
 
 <!-- Grid Section -->
 <div class="w3-row-padding w3-padding-64 w3-container">
@@ -162,13 +134,6 @@ function myFunction() {
   x.className.indexOf("w3-show") == -1
     ? x.className += " w3-show"
     : x.className = x.className.replace(" w3-show", "");
-}
-
-window.onclick = function(event) {
-  var modal = document.getElementById('id01');
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
 }
 
 function openTab(evt, tabName) {
